@@ -1,114 +1,195 @@
-# 🔄 user-flow.md — AccessiNote
+# 🔄 AccessiNote — Kullanıcı Akışı (user-flow.md)
 
-## Kullanıcı Akışı
+> "Kullanıcı uygulamayı açtığında ne görür, ne yapar, ne olur?"
 
 ---
 
-## Akış Diyagramı (Metin Tabanlı)
+## 🟢 ANA AKIŞ — Başarılı Senaryo
+
+### Adım 1 — Uygulamayı Aç
+**Kullanıcı ne yapar?** Tarayıcıda accessinote.com adresine girer.
+
+**Kullanıcı ne görür?**
+- Sayfanın ortasında büyük bir başlık: **"AccessiNote"**
+- Altında tek cümle: *"YouTube ders videolarını saniyeler içinde okunabilir nota dönüştür."*
+- Büyük bir URL giriş kutusu: `YouTube video linkini buraya yapıştır...`
+- Mavi bir buton: **"Notları Oluştur"**
+- Altta 3 adımlı kısa açıklama:
+  - 📎 Linki yapıştır
+  - ⏳ Bekle
+  - 📝 Notlarını al
+
+---
+
+### Adım 2 — Linki Yapıştır
+**Kullanıcı ne yapar?** YouTube'dan bir ders videosunun linkini kopyalar, giriş kutusuna yapıştırır.
+
+**Kullanıcı ne görür?**
+- Kutuda link belirir: `https://youtube.com/watch?v=...`
+- Buton aktif hale gelir
+
+---
+
+### Adım 3 — Butona Tıkla
+**Kullanıcı ne yapar?** "Notları Oluştur" butonuna tıklar (veya Enter'a basar).
+
+**Kullanıcı ne görür?**
+- Sayfa yükleme ekranına geçer
+- Animasyonlu bir yükleme göstergesi belirir
+- Adım adım durum mesajları ekranda sırayla güncellenir:
 
 ```
-[Kullanıcı Girişi]
-       │
-       ▼
-[Ana Sayfa — URL Giriş Kutusu]
-       │
-       ├─── Video URL yapıştır (YouTube / Vimeo / MP4)
-       │
-       ▼
-[Erişilebilirlik Tercihleri — Opsiyonel]
-       │
-       ├─── Yüksek kontrast mod?         □ Evet  □ Hayır
-       ├─── Sesli okuma (TTS) aktif?     □ Evet  □ Hayır
-       ├─── Not dili?                    □ TR  □ EN  □ Otomatik
-       │
-       ▼
-[Analiz Başlat — "Notlarımı Oluştur" butonu]
-       │
-       ▼
-┌─────────────────────────────────────┐
-│        ARKA PLAN İŞLEMİ (AI)        │
-│                                     │
-│  1. Video indir / stream al         │
-│  2. Ses → Whisper ASR → Transkript  │
-│  3. Frame örnekleme → Vision AI     │
-│  4. Transkript + Görseller → Claude │
-│  5. Hiyerarşik not üret             │
-└─────────────────────────────────────┘
-       │
-       ▼
-[Sonuç Sayfası — Not Görüntüleyici]
-       │
-       ├─── Notları oku (ekranda hiyerarşik görünüm)
-       ├─── 🔊 Sesli okuma başlat / durdur
-       ├─── Bölüm atla (zaman damgalı linkler)
-       ├─── Yorum & vurgulama ekle
-       │
-       ▼
-[Dışa Aktarma]
-       │
-       ├─── PDF indir
-       ├─── DOCX indir
-       ├─── Markdown kopyala
-       └─── Paylaşım linki oluştur
+⏳ Video bilgileri alınıyor...
+🎵 Ses ayıklanıyor...        ← ~10-30 saniye
+🧠 Yapay zeka dinliyor...    ← ~20-60 saniye
+📝 Notlar oluşturuluyor...   ← ~10-15 saniye
+```
+
+**Kullanıcı ne yapar?** Hiçbir şey. Sadece bekler.
+
+---
+
+### Adım 4 — Notlar Ekrana Gelir
+**Kullanıcı ne görür?**
+
+Sol panelde video bilgileri:
+```
+🎬 [Video Thumbnail]
+📌 Başlık: Satırca Denk Matrisler
+📺 Kanal: Matematik Hocam
+⏱️ Süre: 6:24
+```
+
+Sağ/Ana panelde yapılandırılmış notlar:
+```
+# Satırca Denk Matrisler
+
+## Tanım
+Bir matrise elementer satır işlemleri uygulandığında
+elde edilen yeni matris, orijinal matrisle **satırca denk**tir.
+
+## Elementer Satır İşlemleri
+- **İşlem 1**: Bir satırı sabit sayıyla çarp
+  → Örnek: 2 × Satır1 = Yeni Satır1
+- **İşlem 2**: İki satırı birbiriyle topla
+- **İşlem 3**: İki satırın yerini değiştir
+
+[00:26] Elementer işlemler detaylı açıklanıyor
+[01:17] Örnek matris üzerinde uygulama
+```
+
+Sağ üstte butonlar:
+- 🔊 **Metni Dinle** — notları sesli okur
+- 📋 **Kopyala** — tüm notu panoya kopyalar
+- 📄 **PDF İndir** — PDF olarak kaydeder
+- 🔄 **Yeni Video** — başa döner
+
+---
+
+### Adım 5 — Notları Kullan
+**Kullanıcı ne yapar?** İstediği şeyi seçer:
+
+- Sayfada okur
+- "Metni Dinle" ile sesli dinler
+- "Kopyala" ile Word/Notion'a yapıştırır
+- "PDF İndir" ile kaydeder
+- "Yeni Video" ile başka bir video dener
+
+---
+
+## 🔴 HATA AKIŞLARI
+
+### Hata 1 — Boş Link
+```
+Kullanıcı → Butona tıklar (kutu boş)
+Sistem    → ❌ "Lütfen bir YouTube linki girin"
+Kullanıcı → Linki yazıp tekrar tıklar
+```
+
+### Hata 2 — Geçersiz URL
+```
+Kullanıcı → "netflix.com/dizi" yapıştırır
+Sistem    → ❌ "Sadece YouTube linkleri destekleniyor"
+Kullanıcı → Doğru linki yapıştırır
+```
+
+### Hata 3 — Video Özel/Silinmiş
+```
+Kullanıcı → Özel bir video linki girer
+Sistem    → ❌ "Bu video erişilebilir değil veya silinmiş"
+Kullanıcı → Farklı bir video dener
+```
+
+### Hata 4 — Video Çok Uzun
+```
+Kullanıcı → 3 saatlik video linki girer
+Sistem    → ❌ "Maksimum 90 dakikalık videolar destekleniyor"
+Kullanıcı → Daha kısa bir video dener
+```
+
+### Hata 5 — Bağlantı Hatası
+```
+Kullanıcı → Butona tıklar, internet kesilir
+Sistem    → ❌ "Bağlantı hatası. Lütfen tekrar deneyin."
+           → 🔁 "Tekrar Dene" butonu belirir
+Kullanıcı → Tekrar Dene'ye basar
 ```
 
 ---
 
-## Adım Adım Kullanıcı Yolculuğu
+## ♿ ENGELLİ KULLANICI AKIŞI
 
-### Adım 1 — Karşılama & Giriş
-**Ekran:** Ana sayfa  
-**Kullanıcı eylemi:** Ders videosunun linkini giriş kutusuna yapıştırır.  
-**Sistem:** URL'nin geçerliliğini kontrol eder; desteklenmeyen formatsa uyarı gösterir.
+### Görme Engelli Kullanıcı (Ekran Okuyucu ile)
+```
+1. Sayfa açılır → Ekran okuyucu başlığı okur: "AccessiNote"
+2. Tab tuşuyla URL kutusuna odaklanır
+3. Linki yapıştırır
+4. Tab → "Notları Oluştur" butonuna gelir → Enter basar
+5. Yükleme sırasında ekran okuyucu her adımı sesli bildirir:
+   → "Ses ayıklanıyor..." / "Yapay zeka dinliyor..."
+6. Notlar gelince ekran okuyucu başlıktan itibaren okur
+7. Tab ile "Metni Dinle" butonuna gelir → Enter basar
+8. Notlar sesli okunur
+```
 
----
-
-### Adım 2 — Tercih Ayarları *(Opsiyonel)*
-**Ekran:** Erişilebilirlik paneli (yan menü veya modal)  
-**Kullanıcı eylemi:** TTS aktif etme, font büyüklüğü, kontrast seçimi.  
-**Sistem:** Tercihler localStorage'a kaydedilir; sonraki oturumlarda otomatik yüklenir.
-
----
-
-### Adım 3 — İşleme
-**Ekran:** Yükleme ekranı  
-**Kullanıcı eylemi:** Bekler.  
-**Sistem:**
-- İlerleme çubuğu gösterilir: *"Ses analiz ediliyor… Görseller işleniyor… Notlar oluşturuluyor…"*
-- Arka planda paralel işlem: ASR + Vision API eş zamanlı çalışır.
-- Tahmini süre gösterilir (video uzunluğuna göre dinamik).
-
----
-
-### Adım 4 — Not Görüntüleme
-**Ekran:** Sonuç paneli (sol: not ağacı, sağ: detay görünümü)  
-**Kullanıcı eylemi:**
-- Başlıklara tıklayarak bölümler arası gezer.
-- Her başlığın yanındaki ⏱️ ikonuna tıklayarak videodaki ilgili zamana atlar.
-- 🔊 butonuna basarak sesli okuma başlatır.
+### Disleksik Kullanıcı
+```
+1. Sayfayı açar, sade tasarım dikkatini dağıtmaz
+2. Linki yapıştırır, butona tıklar
+3. Beklerken adım mesajları durumu takip ettirir
+4. Notlar gelince: büyük font, bol boşluk, hiyerarşik başlıklar
+5. "Metni Dinle" ile dinleyerek takip eder
+```
 
 ---
 
-### Adım 5 — Düzenleme & Kaydetme
-**Ekran:** Not editörü (inline düzenleme)  
-**Kullanıcı eylemi:** Notlara kendi yorumlarını ekler, önemli kısımları renkle işaretler.  
-**Sistem:** Değişiklikler otomatik kaydedilir (autosave, 3 saniyede bir).
+## 📊 AKIŞ ÖZETİ
+
+```
+[Kullanıcı]
+    |
+    | 1. Siteye girer
+    ↓
+[Ana Sayfa]
+    |
+    | 2. Link yapıştırır + Butona tıklar
+    ↓
+[Validasyon] ──── ❌ Hatalı link → Hata mesajı → Geri
+    |
+    | ✅ Geçerli link
+    ↓
+[Yükleme Ekranı]
+    |
+    | Ses indir → Transkribe et → Notları formatla
+    ↓
+[Sonuç Ekranı]
+    |
+    |── 🔊 Sesli dinle
+    |── 📋 Kopyala
+    |── 📄 PDF indir
+    └── 🔄 Yeni video → [Ana Sayfa]
+```
 
 ---
 
-### Adım 6 — Dışa Aktarma
-**Ekran:** Dışa aktarma modalı  
-**Kullanıcı eylemi:** İstediği formatı seçer (PDF / DOCX / MD / Paylaşım linki).  
-**Sistem:** Seçilen formatta dosya oluşturulur ve indirilir.
-
----
-
-## Hata Durumları & Fallback'ler
-
-| Hata Durumu | Kullanıcıya Gösterilen Mesaj | Aksiyon |
-|---|---|---|
-| Geçersiz URL | "Bu video formatı desteklenmiyor. YouTube veya MP4 linki deneyin." | Yeniden giriş |
-| Video çok uzun (>3 saat) | "Video 3 saatten uzun. Bölüm belirterek devam edebilirsiniz." | Başlangıç/bitiş süresi gir |
-| ASR başarısız | "Ses kalitesi düşük. Manuel transkript yükleyebilirsiniz." | Dosya yükleme seçeneği |
-| Vision API hatası | "Görsel içerik okunamadı, metin notlar oluşturuldu." | Metin notlarla devam |
-| İnternet yavaş | Akış bazlı yükleme (streaming), kısmi sonuç göster | — |
+*Son güncelleme: Mart 2026*
