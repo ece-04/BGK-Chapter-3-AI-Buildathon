@@ -1,196 +1,286 @@
-# 📋 prd.md — AccessiNote Product Requirements Document
 
-**Versiyon:** 1.0  
-**Tarih:** Mart 2026  
-**Durum:** Taslak  
-**Hazırlayan:** AccessiNote Ekibi
+# 📋 AccessiNote — Ürün Gereksinim Belgesi (PRD)
 
----
-
-## 1. Ürün Özeti
-
-AccessiNote, ders videolarını takip etmekte zorlanan (özellikle görme engelli ve disleksik) öğrenciler için geliştirilmiş yapay zeka destekli bir web uygulamasıdır. Uzun ve karmaşık ders videolarını saniyeler içinde temiz, düzenli, hiyerarşik ve sesli okunabilir metin notlarına dönüştürür.
-
-**Kısa tanım:** *Video URL'si gir → Akıllı not al*
+> **Versiyon**: 1.0  
+> **Tarih**: Mart 2026  
+> **Yazar**: AccessiNote Ekibi  
+> **Durum**: Geliştirme Aşamasında
 
 ---
 
-## 2. Problem & Fırsat
+## 1. Ürün Nedir?
 
-### 2.1 Problem
+AccessiNote, bir YouTube video linkini yapıştıran öğrencinin önüne saniyeler içinde temiz, düzenli, sesli okunabilir ders notları çıkaran bir web uygulamasıdır.
 
-Türkiye'de yaklaşık 1,2 milyon engelli öğrenci (kaynak: TÜİK 2024) eğitim materyallerine eşit biçimde erişemiyor. Ders videoları bu erişim açığının en büyük kaynağı haline geliyor:
+Kullanıcı hiçbir şey yapmak zorunda değil. Link yapıştır, bekle, notlarını al.
 
-- Görme engelli öğrenciler tahta ve slayt içeriklerinden yoksun kalıyor.
-- Disleksik öğrenciler uzun, yapılandırılmamış videoları not alarak takip edemiyor.
-- Tüm öğrenciler için 60 dakikalık videodan bilgi çıkarmak ortalama **3.5 saat** sürüyor.
-
-### 2.2 Fırsat
-
-Yapay zekanın konuşma tanıma, görsel anlama ve metin özetleme alanlarındaki gelişimi bu problemi teknik olarak çözülebilir kılıyor. Piyasada bu üç teknolojiyi erişilebilirlik odağıyla bir araya getiren bir ürün henüz bulunmuyor.
+Özellikle **görme engelli** ve **disleksik** öğrenciler için tasarlanmıştır. Ama aslında zamanı kısıtlı her öğrencinin işine yarar.
 
 ---
 
-## 3. Hedef Kullanıcılar
+## 2. Neden Bu Ürün Var?
 
-### Birincil Kullanıcı — Engelli Öğrenci
-- **Yaş:** 15–30
-- **Bağlam:** Görme engelli veya disleksi tanısı almış lise/üniversite öğrencisi
-- **Araç:** Ekran okuyucu kullanan, yüksek kontrast temaya ihtiyaç duyan
-- **Hedefi:** Ders videosundan bağımsız olarak not çıkarabilmek
-
-### İkincil Kullanıcı — Zaman Kısıtlı Öğrenci
-- **Yaş:** 18–35
-- **Bağlam:** Sınav döneminde yoğun olan, tekrar için zaman ayıramayan
-- **Araç:** Standart masaüstü / mobil tarayıcı
-- **Hedefi:** Videoyu izlemeden içeriğe hâkim olmak
+- 60 dakikalık bir videodan not çıkarmak ortalama **3.5 saat** alıyor.
+- Görme engelli öğrenciler tahtadaki ve slayttaki içerikleri kaçırıyor.
+- Disleksik öğrenciler uzun, yapılandırılmamış videoları takip edemiyor.
+- YouTube'un otomatik altyazıları ham ve düzensiz — öğrenmeye uygun değil.
+- Piyasada bu üç teknolojiyi (ses tanıma + özetleme + erişilebilirlik) bir arada sunan ürün yok.
 
 ---
 
-## 4. Başarı Metrikleri
+## 3. Kullanıcı Kimdir?
 
-| Metrik | Hedef (İlk 6 ay) |
-|---|---|
-| Aylık aktif kullanıcı (MAU) | 5.000 |
-| Ortalama not üretim süresi | < 45 saniye (60 dk video için) |
-| Kullanıcı memnuniyeti (CSAT) | ≥ 4.2 / 5.0 |
-| Engelli kullanıcı oranı | ≥ %30 |
-| Haftalık geri dönen kullanıcı | ≥ %40 |
-| WCAG 2.1 AA uyum skoru | %100 |
+### Birincil Kullanıcı
+- Üniversite veya lise öğrencisi
+- Görme engelli ya da disleksik
+- Türkçe ders videoları izliyor
+- Teknik bilgisi yok, sadece tarayıcı kullanıyor
 
----
-
-## 5. Özellikler & Gereksinimler
-
-### 5.1 MVP (Minimum Viable Product)
-
-#### F-01 — Video URL Girişi
-- **Açıklama:** Kullanıcı YouTube, Vimeo veya doğrudan MP4 URL'si girebilir.
-- **Kabul kriteri:** Geçersiz URL'de anlaşılır hata mesajı gösterilir. 3 saat altındaki videolar desteklenir.
-- **Öncelik:** 🔴 Kritik
-
-#### F-02 — Otomatik Transkripsiyon
-- **Açıklama:** Whisper ASR ile video sesi metne dönüştürülür. Zaman damgaları korunur.
-- **Kabul kriteri:** Türkçe ve İngilizce için WER (Word Error Rate) ≤ %10.
-- **Öncelik:** 🔴 Kritik
-
-#### F-03 — Görsel İçerik Tanıma
-- **Açıklama:** Her 5 saniyede bir video karesi örneklenerek tahta/slayt içeriği OCR ile çıkarılır.
-- **Kabul kriteri:** En az %80 karakter doğruluğu. Türkçe karakter setini destekler.
-- **Öncelik:** 🔴 Kritik
-
-#### F-04 — Akıllı Not Üretimi
-- **Açıklama:** Transkript ve görsel betimlemeler Claude API'ye gönderilir. Hiyerarşik not çıktısı alınır.
-- **Kabul kriteri:** Çıktı Ana Başlık / Alt Başlık / Madde / Vurgulu Blok yapısına sahip olmalı.
-- **Öncelik:** 🔴 Kritik
-
-#### F-05 — Sesli Okuma (TTS)
-- **Açıklama:** Notlar Web Speech API ile sesli okunur. Oynat/durdur/hız kontrolü mevcut.
-- **Kabul kriteri:** Tüm modern tarayıcılarda çalışır. Hız 0.5x–2x arasında ayarlanabilir.
-- **Öncelik:** 🔴 Kritik
-
-#### F-06 — Not Dışa Aktarma
-- **Açıklama:** PDF ve Markdown formatında indirme.
-- **Kabul kriteri:** Çıktı dosyası indirme linki < 3 saniyede oluşur.
-- **Öncelik:** 🟡 Yüksek
-
-#### F-07 — Erişilebilirlik Modu
-- **Açıklama:** Yüksek kontrast tema, büyük yazı tipi seçeneği, klavye navigasyonu.
-- **Kabul kriteri:** WCAG 2.1 AA standartlarını karşılar. axe ile %0 kritik hata.
-- **Öncelik:** 🔴 Kritik
+### İkincil Kullanıcı
+- Zamanı kısıtlı, hızlı özet isteyen her öğrenci
+- Ders içeriğini taramak isteyen akademisyen
 
 ---
 
-### 5.2 V2 Özellikleri *(MVP sonrası)*
-
-| Özellik | Açıklama |
-|---|---|
-| Kullanıcı hesabı | Not kütüphanesi, tarih bazlı arşiv |
-| DOCX dışa aktarma | Microsoft Word uyumlu not çıktısı |
-| Çoklu dil | Arapça, Almanca, İspanyolca transkripsiyon |
-| Quiz üretici | Notlardan otomatik soru-cevap seti oluşturma |
-| Paylaşım | Notları arkadaşlarla paylaşma linki |
-| Mobil uygulama | React Native ile iOS & Android |
-| Braille çıktı | BRF formatında not dışa aktarma |
-
----
-
-## 6. Teknik Gereksinimler
-
-### 6.1 Performans
-- Sayfa ilk yüklenme süresi (LCP): **< 2.5 saniye**
-- 60 dakikalık video için not üretim süresi: **< 60 saniye**
-- API yanıt süresi (p95): **< 3 saniye**
-- Uptime: **≥ %99.5**
-
-### 6.2 Erişilebilirlik
-- WCAG 2.1 AA tam uyum
-- NVDA, JAWS ve VoiceOver ekran okuyucularıyla uyumlu test edilmiş
-- Tüm etkileşimler klavye ile erişilebilir
-- Renk kontrast oranı: ≥ 4.5:1 (normal metin), ≥ 3:1 (büyük metin)
-
-### 6.3 Güvenlik
-- Tüm API anahtarları sunucu taraflı; frontend'e asla sızdırılmaz
-- Video/ses dosyaları işlendikten sonra 1 saat içinde silinir
-- Kullanıcı verileri KVKK uyumlu şekilde işlenir
-- HTTPS zorunlu; HTTP istekleri 301 ile yönlendirilir
-
-### 6.4 Tarayıcı Desteği
-- Chrome ≥ 110, Firefox ≥ 115, Safari ≥ 16, Edge ≥ 110
-- Mobil: Chrome for Android, Safari for iOS
-
----
-
-## 7. Kullanıcı Hikayeleri
+## 4. Kullanıcı Yolculuğu (Adım Adım)
 
 ```
-US-01: Görme engelli öğrenci olarak, bir YouTube dersi linkini yapıştırıp
-       tahta yazılarının betimlendiği, sesli okunabilir notlar almak istiyorum.
-       → Başarı: Tüm görsel içerik metne dönüşmüş ve TTS çalışıyor.
-
-US-02: Disleksik öğrenci olarak, 90 dakikalık bir videoyu izlemek yerine
-       önemli noktaları maddeler halinde görmek istiyorum.
-       → Başarı: Notlar hiyerarşik yapıda, gereksiz tekrar yok.
-
-US-03: Sınava hazırlanan öğrenci olarak, notlarımı PDF olarak
-       indirip çevrimdışı çalışmak istiyorum.
-       → Başarı: PDF 3 saniye içinde indirildi.
-
-US-04: Öğrenci olarak, belirli bir konuya geri dönmek istediğimde
-       videodaki ilgili zamana atlayabilmek istiyorum.
-       → Başarı: Her not başlığında video zaman damgası linki var.
+Kullanıcı siteye girer
+        ↓
+YouTube video linkini yapıştırır
+        ↓
+"Notları Oluştur" butonuna tıklar
+        ↓
+[Arka planda]: Ses indirilir → Transkribe edilir → Notlar oluşturulur
+        ↓
+Ekranda yapılandırılmış notlar belirir
+        ↓
+Kullanıcı notları okur / dinler / indirir
 ```
+
+Toplam bekleme süresi: **30–90 saniye** (video uzunluğuna göre)
 
 ---
 
-## 8. Kısıtlamalar & Riskler
+## 5. Ekranlar ve İçerikleri
 
-| Risk | Olasılık | Etki | Azaltma Stratejisi |
-|---|---|---|---|
-| API maliyetleri yüksek | Orta | Yüksek | Ücretsiz kullanım limiti; ücretli plan |
-| Telif haklı video içerikleri | Yüksek | Orta | Kullanım koşullarında sorumluluk reddi |
-| Ses kalitesi düşük videolar | Orta | Orta | Manuel transkript yükleme seçeneği |
-| Desteklenmeyen video platformu | Düşük | Düşük | MP4 direkt yükleme fallback |
-| KVKK uyumsuzluğu | Düşük | Yüksek | Hukuk danışmanlığı, veri minimizasyonu |
+### Ekran 1 — Ana Sayfa (Landing)
 
----
+**Kullanıcı ne görür?**
+- Uygulamanın adı ve tek cümlelik açıklaması
+- Büyük bir URL giriş kutusu
+- "Notları Oluştur" butonu
+- Kısa 3 adımlı açıklama: "Linki yapıştır → Bekle → Notlarını al"
 
-## 9. Yol Haritası
+**Kullanıcı ne yapar?**
+- YouTube video linkini kutuya yapıştırır
+- Butona tıklar
 
-```
-Mart 2026      → Proje başlangıcı, MVP geliştirme
-Nisan 2026     → Alpha test (20 engelli öğrenci)
-Mayıs 2026     → Beta yayını (kapalı kayıt)
-Haziran 2026   → Açık yayın (public launch)
-Ağustos 2026   → V2 özellikleri (hesap sistemi, DOCX)
-Kasım 2026     → Mobil uygulama beta
-```
+**Validasyon:**
+- Boş link → "Lütfen bir YouTube linki girin"
+- Geçersiz URL → "Geçerli bir YouTube linki girin"
+- YouTube dışı link → "Sadece YouTube linkleri destekleniyor"
 
 ---
 
-## 10. Ekler
+### Ekran 2 — İşlem Ekranı (Loading)
 
-- **Tasarım:** `features/ui/` klasöründeki Figma dışa aktarımları
-- **API Dökümanı:** `features/api/README.md`
-- **Test Planı:** `features/tests/test-plan.md`
-- **KVKK Politikası:** `features/legal/privacy.md`
+**Kullanıcı ne görür?**
+- Animasyonlu yükleme göstergesi
+- Hangi adımda olduğunu gösteren durum mesajları:
+  - ⏳ "Video bilgileri alınıyor..."
+  - 🎵 "Ses ayıklanıyor..."
+  - 🧠 "Yapay zeka dinliyor..."
+  - 📝 "Notlar oluşturuluyor..."
+- Tahmini süre göstergesi
+
+**Kullanıcı ne yapar?**
+- Bekler. Başka bir şey yapmasına gerek yok.
+
+**Hata durumları:**
+- Video bulunamazsa → "Bu video erişilebilir değil"
+- Video çok uzunsa → "Maksimum 90 dakikalık videolar destekleniyor"
+- API hatası → "Bir sorun oluştu, lütfen tekrar deneyin"
+
+---
+
+### Ekran 3 — Sonuç Ekranı (Notlar)
+
+**Kullanıcı ne görür?**
+
+Sol panel — Video Bilgisi:
+- Video başlığı
+- Kanal adı
+- Video süresi
+- Küçük thumbnail
+
+Sağ / Ana panel — Oluşturulan Notlar:
+- Hiyerarşik başlıklar (H1, H2, H3)
+- Madde işaretli alt notlar
+- **Kalın** yazılmış önemli kavramlar
+- Zaman damgaları (örn. [02:45] Bu kavram burada açıklandı)
+- Temiz, bol boşluklu, okunabilir format
+
+**Kullanıcı ne yapabilir?**
+- Notları sayfada okur
+- "Metni Dinle" butonu → tarayıcı TTS ile sesli okuma
+- "Kopyala" butonu → panoya kopyalar
+- "PDF İndir" butonu → PDF olarak indirir (v1.5)
+- "Yeni Video" butonu → başa döner
+
+---
+
+## 6. AI Ne Yapar? (Teknik Olmayan Açıklama)
+
+Kullanıcı butona tıkladığında arka planda şunlar olur:
+
+### Adım 1 — Sesi İndir
+`yt-dlp` adlı araç YouTube videosunun sesini bilgisayara indirir. Görüntü değil, sadece ses. Bu işlem video uzunluğuna göre 5–30 saniye sürer.
+
+### Adım 2 — Sesi Metne Çevir
+Google Gemini AI ses dosyasını dinler ve konuşulanları kelimesi kelimesine Türkçe metne döker. Bu bir "dikte makinesi" gibi çalışır ama çok daha akıllıdır — bağlamı anlar, noktalama koyar.
+
+### Adım 3 — Notları Oluştur
+Aynı AI ham transkripsiyon metnini alır ve şunu sorar kendine: "Bu bir ders notu olsaydı nasıl görünürdü?" Sonra başlıklar koyar, önemli kavramları vurgular, gereksiz tekrarları atar, öğrencinin anlayacağı temiz bir not haline getirir.
+
+---
+
+## 7. Teknik Mimari
+
+```
+[Kullanıcı Tarayıcısı]
+        ↓ HTTP POST /api/process
+[Next.js API Route — process]
+        ↓ yt-dlp komutu
+[yt-dlp + ffmpeg] → .mp3 dosyası
+        ↓
+[Next.js API Route — transcribe]
+        ↓ Gemini File API (upload)
+        ↓ Gemini 2.5 Flash (generateContent)
+[Google Gemini AI]
+        ↓ Transkripsiyon metni
+[Next.js API Route — notes] (yakında)
+        ↓ Gemini ile not formatla
+[Kullanıcı Tarayıcısı] ← Yapılandırılmış notlar
+```
+
+### Teknoloji Seçimleri
+
+| Katman | Teknoloji | Neden? |
+|--------|-----------|--------|
+| Frontend | Next.js 14 (App Router) | Hızlı, SEO dostu, API route'lar dahili |
+| Stil | Tailwind CSS | Hızlı geliştirme |
+| Ses indirme | yt-dlp + ffmpeg | En güvenilir YouTube ses aracı |
+| AI | Google Gemini 2.5 Flash | Ses anlama + metin üretme bir arada |
+| Dosya yükleme | Gemini File API | 13MB+ dosyalar için zorunlu |
+| Deploy | Vercel (planlanan) | Next.js için en kolay |
+
+---
+
+## 8. API Endpoint'leri
+
+### POST /api/process
+**Görev**: YouTube URL'den sesi indir  
+**Girdi**: `{ url: "https://youtube.com/watch?v=..." }`  
+**Çıktı**: `{ fileName: "audio-123456.mp3" }`  
+**Süre**: 5–30 saniye
+
+### POST /api/transcribe
+**Görev**: Ses dosyasını metne çevir  
+**Girdi**: `{ fileName: "audio-123456.mp3" }`  
+**Çıktı**: `{ text: "Ham transkripsiyon metni..." }`  
+**Süre**: 15–60 saniye
+
+### POST /api/notes *(yakında)*
+**Görev**: Ham metni yapılandırılmış nota dönüştür  
+**Girdi**: `{ text: "Ham transkripsiyon..." }`  
+**Çıktı**: `{ notes: "# Başlık\n## Alt başlık\n..." }`  
+**Süre**: 5–15 saniye
+
+---
+
+## 9. Kısıtlamalar (v1.0)
+
+| Kısıt | Değer | Neden? |
+|-------|-------|--------|
+| Maksimum video süresi | 90 dakika | Gemini token limiti |
+| Desteklenen dil | Türkçe | İlk MVP odağı |
+| Desteklenen kaynak | Sadece YouTube | yt-dlp kısıtı |
+| Kullanıcı hesabı | Yok | MVP basitliği |
+| Not kaydetme | Yok | MVP basitliği |
+| Eş zamanlı işlem | 1 video | Sunucu kapasitesi |
+
+---
+
+## 10. Erişilebilirlik Gereksinimleri
+
+Bu ürünün DNA'sında erişilebilirlik var. Şunlar zorunlu:
+
+- [ ] Tüm butonlar klavye ile kullanılabilir olmalı
+- [ ] Ekran okuyucu (NVDA, VoiceOver) ile tam uyumlu ARIA etiketleri
+- [ ] Renk kontrastı WCAG AA standardını karşılamalı
+- [ ] Yükleme durumları ekran okuyucuya sesli bildirilmeli (`aria-live`)
+- [ ] Font boyutu en az 16px, satır aralığı 1.6
+- [ ] "Metni Dinle" özelliği (Web Speech API)
+- [ ] Odak sırası mantıklı ve görünür olmalı
+
+---
+
+## 11. Başarı Metrikleri
+
+| Metrik | Hedef (3 ay) |
+|--------|-------------|
+| Haftalık aktif kullanıcı | 500+ |
+| Ortalama işlem süresi | < 90 saniye |
+| Başarılı transkripsiyon oranı | > 90% |
+| Kullanıcı memnuniyeti (anket) | 4/5+ |
+| Engelli kullanıcı oranı | > 30% |
+
+---
+
+## 12. Yol Haritası
+
+### v1.0 — MVP (Şu an)
+- [x] YouTube URL doğrulama
+- [x] Ses indirme (yt-dlp)
+- [x] Transkripsiyon (Gemini File API)
+- [ ] Not formatlaması (ikinci Gemini çağrısı)
+- [ ] Temiz sonuç ekranı
+- [ ] Temel erişilebilirlik
+
+### v1.5 — İlk Geliştirme
+- [ ] PDF / Word export
+- [ ] "Metni Dinle" özelliği
+- [ ] Hata mesajları iyileştirme
+- [ ] Mobil uyumluluk
+
+### v2.0 — Öğrenme Araçları
+- [ ] Flashcard oluşturma
+- [ ] Quiz oluşturma
+- [ ] Not kaydetme (local storage)
+
+### v2.5 — Hesap Sistemi
+- [ ] Kullanıcı kaydı / girişi
+- [ ] Not arşivi
+- [ ] Freemium model
+
+### v3.0 — Görsel Anlama
+- [ ] Slayt ve tahta OCR
+- [ ] Görsel içeriği nota ekleme
+- [ ] Çoklu dil desteği
+
+---
+
+## 13. Riskler ve Çözümler
+
+| Risk | Olasılık | Çözüm |
+|------|----------|-------|
+| YouTube API değişiklikleri yt-dlp'yi bozar | Orta | yt-dlp düzenli güncelleme |
+| Gemini API maliyeti artar | Düşük | Kullanım limitleri ekle |
+| Uzun videolarda zaman aşımı | Yüksek | Webhook / kuyruk sistemi |
+| Telif hakkı sorunları | Orta | Sadece kişisel kullanım, kayıt yok |
+| Türkçe dışı videolarda kalite | Yüksek | v1.0'da sadece Türkçe destekle |
+
+---
+
+*Bu belge yaşayan bir dokümandır. Geliştirme sürecinde güncellenmeye devam edecektir.*
