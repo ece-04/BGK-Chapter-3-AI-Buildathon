@@ -1,56 +1,103 @@
-# 💡 idea.md — AccessiNote
+# 💡 AccessiNote — Fikir Belgesi (idea.md)
 
-## Problem Tanımı
-
-Üniversite ve lise öğrencilerinin büyük bir kısmı, eğitim içeriklerini video formatında tüketmek zorunda kalıyor. Ancak bu içeriklere **eşit erişim** mümkün değil:
-
-- **Görme engelli öğrenciler**, videodaki tahta yazılarını, slaytları, grafikleri ve görsel açıklamaları takip edemiyor.
-- **Disleksik öğrenciler**, uzun videoları izlerken dikkatlerini sürdürmekte ve not çıkarmakta ciddi güçlük yaşıyor.
-- **Zaman kısıtı olan öğrenciler**, 60 dakikalık bir videodan kritik bilgileri süzmek için saatler harcıyor.
-
-Bu üç problem birbirinden bağımsız görünse de ortak bir köke sahip: **Ders videoları, farklı öğrenme ihtiyaçlarına göre tasarlanmıyor.**
+## 🎯 Tek Cümlelik Fikir
+AccessiNote, ders videolarını takip etmekte zorlanan engelli ve dezavantajlı öğrenciler için YouTube videolarını saniyeler içinde temiz, hiyerarşik ve sesli okunabilir notlara dönüştüren yapay zeka destekli bir web uygulamasıdır.
 
 ---
 
-## Hedef Kullanıcılar
+## 😣 Problem
 
-| Kullanıcı Segmenti | Temel Zorluk | AccessiNote'tan Beklenti |
-|---|---|---|
-| Görme engelli öğrenciler | Görsel içeriğe erişim yok | Tüm görsellerin metin betimlemesi |
-| Disleksik öğrenciler | Odak & not çıkarma güçlüğü | Yapılandırılmış, kısa, vurgulu notlar |
-| Yoğun öğrenciler | Zaman kısıtı | Dakikalarca videoyu saniyede özetle |
-| Genel kullanıcılar | Tekrar & ezber kolaylığı | İndirilebilir, düzenlenebilir notlar |
+### Kimler Etkileniyor?
+- **Görme engelli öğrenciler**: Tahta yazıları, slaytlar, görseller — bunların hiçbirini alamıyorlar. Sadece sesi duyuyorlar ama görsel içerik dersin büyük bir bölümünü oluşturuyor.
+- **Disleksik öğrenciler**: Uzun, yapılandırılmamış video içeriklerini not alarak takip etmek neredeyse imkânsız. Okuma hızları farklı, dikkat dağınıklığı yüksek.
+- **Tüm öğrenciler**: 60 dakikalık bir videodan çalışma notu çıkarmak ortalama **3.5 saat** sürüyor. Bu inanılmaz bir verimlilik kaybı.
 
----
+### Mevcut Çözümlerin Eksiklikleri
+| Araç | Sorun |
+|------|-------|
+| YouTube otomatik altyazı | Ham, düzensiz, noktalama işareti yok |
+| Otter.ai / Whisper | Sadece transkripsiyon, not formatlaması yok |
+| Genel özet araçları | Erişilebilirlik odağı yok, görsel içeriği anlamıyor |
+| Manuel not alma | Çok zaman alıyor, engelli kullanıcılar için yetersiz |
 
-## Yapay Zekanın Rolü
-
-AccessiNote'ta AI üç temel görev üstlenir:
-
-### 1. 🎙️ Konuşma Transkripsiyonu (ASR)
-- Video ses kanalı Whisper modeline gönderilir.
-- Türkçe & İngilizce başta olmak üzere çok dilli transkript üretilir.
-- Konuşmacı bölümleme (diarization) ile "kim ne zaman konuştu" ayrıştırılır.
-
-### 2. 👁️ Görsel İçerik Anlama (Vision AI)
-- Video kareleri belirli aralıklarla örneklenir (frame sampling).
-- Google Vision API ile tahta yazıları, slayt metni ve grafikler OCR ile çıkarılır.
-- Claude Vision ile görseller doğal dil betimlemesine dönüştürülür: *"Slayt 3'te bir çizgi grafiği gösterilmektedir. X ekseni yıl (2000–2024), Y ekseni küresel sıcaklık artışı (°C)."*
-
-### 3. 🧠 Akıllı Not Üretimi (LLM)
-- Transkript + görsel betimlemeler Claude API'ye bağlam olarak verilir.
-- AI, gereksiz tekrar ve dolgu cümlelerini ayıklar.
-- Çıktı hiyerarşik bir yapıda sunulur:
-  - **Ana Başlık** → Konu
-  - **Alt Başlık** → Kavram / Teori
-  - **Madde** → Açıklama / Örnek
-  - **🔑 Formül / Tanım** → Vurgulu blok
-  - **📌 Önemli Not** → Sınav odaklı
+**Piyasada bu üç teknolojiyi (konuşma tanıma + görsel anlama + metin özetleme) erişilebilirlik odağıyla bir araya getiren bir ürün henüz bulunmuyor.**
 
 ---
 
-## Vizyon
+## ✨ Çözüm
 
-> *"Her öğrenci, hangi engeli ya da kısıtı olursa olsun, bir ders videosundan aynı kalitede bilgiye aynı sürede ulaşabilmelidir."*
+AccessiNote şu adımları otomatik olarak gerçekleştirir:
 
-AccessiNote, erişilebilirliği bir **eklenti** değil **temel tasarım ilkesi** olarak benimseyen ilk yapay zeka destekli not alma platformu olmayı hedefliyor.
+1. **YouTube URL al** → Kullanıcı sadece video linkini yapıştırır
+2. **Sesi ayıkla** → `yt-dlp` ile video sesini indirir
+3. **Transkribe et** → Gemini AI ile konuşmaları metne döker
+4. **Notları yapılandır** → Başlıklar, alt başlıklar, vurgular, önemli kavramlar
+5. **Erişilebilir sun** → Ekran okuyucuyla uyumlu, sesli okunabilir format
+
+---
+
+## 👥 Hedef Kullanıcılar
+
+### Birincil
+- Görme engelli üniversite / lise öğrencileri
+- Disleksik öğrenciler
+- İşitme kaybı olmayan ama görsel öğrenme güçlüğü yaşayan bireyler
+
+### İkincil
+- Zaman baskısı altındaki tüm öğrenciler
+- Online ders izleyen yetişkin öğrenciler
+- Ders içeriğini hızlıca taramak isteyen akademisyenler
+
+---
+
+## 🔑 Temel Değer Önerisi
+
+> "60 dakikalık dersi 60 saniyede okunabilir nota dönüştür."
+
+- ⚡ **Hız**: Dakikalar içinde hazır
+- ♿ **Erişilebilirlik**: Ekran okuyucu uyumlu, temiz HTML çıktısı
+- 🧠 **Zeka**: Sadece transkripsiyon değil, yapılandırılmış öğrenme notu
+- 🎯 **Odak**: Öğrenciler için özel tasarım, genel amaçlı değil
+
+---
+
+## 🛠️ Teknik Temel (Mevcut Durum)
+
+- **Frontend**: Next.js (App Router)
+- **Ses indirme**: yt-dlp + ffmpeg
+- **AI**: Google Gemini 2.5 Flash (ses transkripsiyon + not oluşturma)
+- **Dosya işleme**: Gemini File API (büyük ses dosyaları için)
+
+---
+
+## 🚀 Gelecek Vizyon
+
+| Aşama | Özellik |
+|-------|---------|
+| v1.0 | YouTube → Transkripsiyon → Yapılandırılmış Not |
+| v1.5 | PDF / Word export, not kaydetme |
+| v2.0 | Flashcard ve quiz oluşturma |
+| v2.5 | Kullanıcı hesabı, not arşivi |
+| v3.0 | Görsel içerik anlama (tahta, slayt OCR) |
+| v3.5 | Çoklu dil desteği |
+
+---
+
+## 💰 İş Modeli (İlk Düşünceler)
+
+- **Freemium**: Ayda 5 video ücretsiz
+- **Pro plan**: Sınırsız video, export özellikleri, öncelikli işlem
+- **Kurumsal**: Üniversiteler ve erişilebilirlik merkezleri için toplu lisans
+
+---
+
+## 🏆 Rekabet Avantajı
+
+AccessiNote'u benzersiz kılan **üç şeyin kesişimi**:
+1. Erişilebilirlik öncelikli tasarım
+2. Not alma zekası (sadece transkripsiyon değil)
+3. Sıfır kurulum — tarayıcıda çalışır, link yapıştır yeter
+
+---
+
+*Son güncelleme: Mart 2026*
