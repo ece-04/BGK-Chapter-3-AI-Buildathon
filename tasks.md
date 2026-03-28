@@ -1,156 +1,197 @@
-# ✅ tasks.md — AccessiNote Görev Listesi
+# ✅ AccessiNote — Geliştirme Görev Listesi (tasks.md)
 
-**Güncelleme:** Mart 2026  
-**Sprint:** MVP (v1.0)
-
----
-
-## 🔴 Kritik — Temel Altyapı
-
-- [ ] Proje repo yapısı oluşturulacak (`features/`, `app/`, `components/`, `lib/`)
-- [ ] Next.js 14 projesi kurulacak (App Router)
-- [ ] Tailwind CSS yapılandırılacak
-- [ ] Supabase projesi oluşturulacak; bağlantı test edilecek
-- [ ] `.env.local` şablonu hazırlanacak (`.env.example`)
-- [ ] Vercel'e ilk deployment yapılacak
+> Her görevi tamamladıkça `[ ]` → `[x]` olarak işaretle.  
+> Sırayla git — her aşama bir sonrakinin temeli.
 
 ---
 
-## 🔴 Kritik — Video İşleme
+## 🏁 AŞAMA 1 — Backend Tamamlama (MVP Çekirdeği)
 
-- [ ] YouTube URL doğrulama fonksiyonu yazılacak (`features/video/validate.ts`)
-- [ ] `yt-dlp` ile video/ses indirme modülü kurulacak (`features/video/download.ts`)
-- [ ] Video formatı kontrolü eklenecek (MP4, WebM, MOV)
-- [ ] 3 saatten uzun videolar için kullanıcı uyarısı geliştirilecek
-- [ ] Frame örnekleme modülü yazılacak (her 5 saniyede 1 kare) (`features/video/frames.ts`)
+> Hedef: Kullanıcı link verince notlar ekrana gelsin.
 
----
+### 1.1 — `/api/notes` Endpoint'i Yaz
+- [ ] `app/api/notes/route.ts` dosyasını oluştur
+- [ ] Gemini'ye ham transkripsiyon metni gönder
+- [ ] Prompt yaz: başlıklar, alt başlıklar, kalın kavramlar, zaman damgaları
+- [ ] Markdown formatında yapılandırılmış not döndür
+- [ ] Hata yönetimi ekle (try/catch, anlamlı hata mesajları)
 
-## 🔴 Kritik — Transkripsiyon (ASR)
+### 1.2 — API Akışını Birleştir
+- [ ] Frontend'de 3 API çağrısını sırayla yap: `process` → `transcribe` → `notes`
+- [ ] Her adımın çıktısını bir sonrakine geçir
+- [ ] Tüm akış tek bir "Notları Oluştur" butonuna bağlı olsun
 
-- [ ] Whisper API entegrasyonu kurulacak (`features/asr/whisper.ts`)
-- [ ] Türkçe dil desteği test edilecek
-- [ ] Zaman damgalı (timestamp) transkript çıktısı sağlanacak
-- [ ] Uzun ses dosyaları için segment bölme mantığı eklenecek
-- [ ] Transkripsiyon hata yönetimi yazılacak (düşük ses kalitesi vb.)
-
----
-
-## 🔴 Kritik — Görsel İçerik Tanıma (Vision AI)
-
-- [ ] Google Vision API entegrasyonu kurulacak (`features/vision/ocr.ts`)
-- [ ] Frame → Vision API pipeline'ı bağlanacak
-- [ ] Türkçe karakter seti (ş, ğ, ü, ö, ç, ı) doğruluğu test edilecek
-- [ ] Görsel betimlemelerin transkriptle birleştirilmesi sağlanacak
-- [ ] Düşük kaliteli/okunamaz frame'ler için fallback yazılacak
+### 1.3 — Temp Dosya Temizliği
+- [ ] İşlem bittikten sonra `.mp3` dosyası otomatik silinsin
+- [ ] `/public/temp/` klasörü birikmiş dosyalardan korunsun
+- [ ] Hata durumunda da dosya temizlensin (finally bloğu)
 
 ---
 
-## 🔴 Kritik — Akıllı Not Üretimi (Claude API)
+## 🎨 AŞAMA 2 — Frontend: 3 Ekranı Yap
 
-- [ ] Anthropic SDK entegrasyonu kurulacak (`features/notes/generate.ts`)
-- [ ] Sistem promptu yazılacak (hiyerarşik not yapısı için)
-- [ ] Transkript + görsel betimlemelerin API'ye gönderilmesi sağlanacak
-- [ ] JSON formatında çıktı şeması tanımlanacak
-- [ ] Uzun transkriptler için context penceresi yönetimi yapılacak
-- [ ] API hata yönetimi ve retry mantığı eklenecek
+> Hedef: Kullanıcı deneyimi akışkan ve erişilebilir olsun.
 
----
+### 2.1 — Ekran 1: Ana Sayfa (Landing)
+- [ ] Uygulama adı ve tek cümlelik açıklama
+- [ ] Büyük, belirgin URL giriş kutusu
+- [ ] "Notları Oluştur" butonu
+- [ ] "Linki yapıştır → Bekle → Notlarını al" 3 adım açıklaması
+- [ ] URL validasyonu: boş / geçersiz / YouTube dışı için hata mesajları
+- [ ] Enter tuşuyla da form submit olsun
 
-## 🔴 Kritik — Kullanıcı Arayüzü
+### 2.2 — Ekran 2: Yükleme Ekranı (Loading)
+- [ ] Animasyonlu yükleme göstergesi (spinner veya progress bar)
+- [ ] Adım adım durum mesajları:
+  - `⏳ Video bilgileri alınıyor...`
+  - `🎵 Ses ayıklanıyor...`
+  - `🧠 Yapay zeka dinliyor...`
+  - `📝 Notlar oluşturuluyor...`
+- [ ] Her API çağrısı tamamlandığında mesaj otomatik güncellensin
+- [ ] `aria-live="polite"` ile ekran okuyucuya bildir
 
-- [ ] Ana sayfa tasarlanacak (URL giriş kutusu + açıklama)
-- [ ] Yükleme/işleme ekranı geliştirilecek (progress bar + durum mesajları)
-- [ ] Not görüntüleme sayfası yapılacak (hiyerarşik ağaç görünümü)
-- [ ] Mobil uyumlu (responsive) layout yazılacak
-- [ ] Hata sayfaları tasarlanacak (404, 500, API hatası)
-
----
-
-## 🟡 Yüksek — Sesli Okuma (TTS)
-
-- [ ] Web Speech API entegrasyonu yapılacak (`features/tts/speak.ts`)
-- [ ] Oynat / Durdur / Devam ettir kontrolleri eklenecek
-- [ ] Hız ayarı (0.5x – 2x) geliştirilecek
-- [ ] Aktif okunan satırın vurgulanması sağlanacak
-- [ ] Tarayıcı uyumluluğu test edilecek (Chrome, Firefox, Safari)
-
----
-
-## 🟡 Yüksek — Dışa Aktarma
-
-- [ ] PDF dışa aktarma modülü yazılacak (`features/export/pdf.ts`)
-- [ ] Markdown dışa aktarma modülü yazılacak (`features/export/markdown.ts`)
-- [ ] İndirme butonu UI bileşeni geliştirilecek
-- [ ] Dışa aktarılan dosyada başlık, tarih ve video kaynağı bilgisi yer alacak
+### 2.3 — Ekran 3: Sonuç Ekranı (Notlar)
+- [ ] Sol panel: video başlığı, kanal adı, süre, thumbnail
+- [ ] Sağ/Ana panel: markdown formatındaki notları render et
+- [ ] H1, H2, H3 başlıkları görsel hiyerarşiyle göster
+- [ ] Kalın kavramlar, madde işaretleri düzgün görünsün
+- [ ] Zaman damgaları tıklanabilir olsun (ileride YouTube'a yönlendir)
+- [ ] "Kopyala" butonu — tüm notu panoya kopyala
+- [ ] "Yeni Video" butonu — ana sayfaya dön, state sıfırlansın
 
 ---
 
-## 🟡 Yüksek — Erişilebilirlik
+## ♿ AŞAMA 3 — Erişilebilirlik
 
-- [ ] Tüm bileşenlere ARIA etiketleri eklenecek
-- [ ] Klavye navigasyonu test edilecek (Tab, Enter, Escape)
-- [ ] Yüksek kontrast tema eklenecek
-- [ ] Renk kontrast oranları WCAG 2.1 AA standartına göre kontrol edilecek
-- [ ] NVDA ve VoiceOver ile uyumluluk test edilecek
-- [ ] `axe-core` ile otomatik erişilebilirlik taraması yapılacak
+> Hedef: Görme engelli ve disleksik kullanıcılar rahatça kullanabilsin.
 
----
+### 3.1 — Ekran Okuyucu Uyumu
+- [ ] Tüm butonlara `aria-label` ekle
+- [ ] Giriş kutusuna `aria-describedby` ile açıklama bağla
+- [ ] Yükleme ekranına `aria-live="polite"` ekle
+- [ ] Hata mesajları `role="alert"` ile tanımla
+- [ ] Odak sırası (tab order) mantıklı olsun
 
-## 🟡 Yüksek — API & Güvenlik
+### 3.2 — Klavye Navigasyonu
+- [ ] Tab ile tüm etkileşimli elemanlara ulaşılabilsin
+- [ ] Butonlar Enter ve Space ile tetiklensin
+- [ ] Odak göstergesi (focus ring) görünür olsun, gizlenmesin
 
-- [ ] Tüm API anahtarları sunucu taraflı tutulacak (client'a sızdırılmayacak)
-- [ ] Rate limiting middleware yazılacak
-- [ ] Video/ses dosyaları işlendikten 1 saat sonra silinecek (cron job)
-- [ ] Input sanitization eklenecek (URL enjeksiyon saldırılarına karşı)
-- [ ] HTTPS zorlaması yapılacak
+### 3.3 — Görsel Erişilebilirlik
+- [ ] Metin/arka plan renk kontrastı WCAG AA (4.5:1) karşılasın
+- [ ] Font boyutu minimum 16px
+- [ ] Satır aralığı minimum 1.6
+- [ ] Hata mesajları sadece renkle değil ikonla da belirtilsin
 
----
-
-## 🟢 Normal — Kullanıcı Deneyimi
-
-- [ ] Erişilebilirlik tercihleri paneli (yan menü veya modal) geliştirilecek
-- [ ] Tercihler localStorage'a kaydedilecek (oturum bağımsız)
-- [ ] Video zaman damgası linkleri not başlıklarına eklenecek
-- [ ] Not editörü (inline düzenleme + vurgulama) geliştirilecek
-- [ ] Autosave özelliği eklenecek (3 saniyede bir)
-- [ ] Paylaşım linki oluşturma özelliği eklenecek
+### 3.4 — "Metni Dinle" Özelliği
+- [ ] Web Speech API ile notları sesli oku
+- [ ] "Dinle / Durdur" toggle butonu
+- [ ] Okuma hızı ayarı (0.5x — 2x)
+- [ ] Okunan bölüm highlight ile takip edilsin (opsiyonel)
 
 ---
 
-## 🟢 Normal — Test & Kalite
+## 🛡️ AŞAMA 4 — Hata Yönetimi & Edge Case'ler
 
-- [ ] Unit testler yazılacak (Vitest / Jest)
-- [ ] API route'ları için integration testleri yazılacak
-- [ ] Farklı video türleriyle (ders, seminer, podcast) uçtan uca test yapılacak
-- [ ] Yük testi yapılacak (eş zamanlı 100 kullanıcı senaryosu)
-- [ ] Lighthouse ile performans ve erişilebilirlik skoru ölçülecek (hedef: ≥ 90)
+> Hedef: Uygulama hiç çökmeden akıllıca hata versin.
 
----
-
-## 🔵 Backlog — V2 Özellikleri
-
-- [ ] Kullanıcı hesabı ve not kütüphanesi
-- [ ] DOCX formatında dışa aktarma
-- [ ] Arapça, Almanca, İspanyolca dil desteği
-- [ ] Notlardan otomatik quiz üretici
-- [ ] React Native ile mobil uygulama (iOS & Android)
-- [ ] Braille (BRF) formatında çıktı desteği
+- [ ] Video bulunamadı → "Bu video erişilebilir değil veya silinmiş"
+- [ ] Video 90 dakikadan uzun → "Maksimum 90 dakikalık videolar destekleniyor"
+- [ ] Özel/gizli video → "Bu video herkese açık değil"
+- [ ] İnternet bağlantısı kesildi → "Bağlantı hatası, lütfen tekrar deneyin"
+- [ ] Gemini API kotası doldu → "Şu an yoğun talep var, biraz sonra deneyin"
+- [ ] Tüm hata mesajları Türkçe ve anlaşılır olsun
+- [ ] Hata sonrası kullanıcı tekrar deneyebilsin (retry butonu)
 
 ---
 
-## 📊 İlerleme Özeti
+## 📱 AŞAMA 5 — Mobil Uyumluluk
 
-| Kategori | Toplam | Tamamlanan | Oran |
-|---|---|---|---|
-| Temel Altyapı | 6 | 0 | %0 |
-| Video İşleme | 5 | 0 | %0 |
-| Transkripsiyon | 5 | 0 | %0 |
-| Vision AI | 5 | 0 | %0 |
-| Not Üretimi | 6 | 0 | %0 |
-| Arayüz | 5 | 0 | %0 |
-| TTS | 5 | 0 | %0 |
-| Dışa Aktarma | 4 | 0 | %0 |
-| Erişilebilirlik | 6 | 0 | %0 |
-| API & Güvenlik | 5 | 0 | %0 |
-| **Toplam MVP** | **52** | **0** | **%0** |
+> Hedef: Telefonda da düzgün çalışsın.
+
+- [ ] Responsive layout — 320px'den başlayan ekranlar
+- [ ] URL giriş kutusu mobilde büyük ve kolay tıklanabilir
+- [ ] Sonuç ekranı tek kolon olarak yeniden düzenlensin (mobilde sol panel üste)
+- [ ] Touch target boyutları minimum 44x44px
+- [ ] Mobil klavye açıldığında layout bozulmasın
+
+---
+
+## 🚀 AŞAMA 6 — v1.5 Özellikleri
+
+> Hedef: MVP'yi tamamla, ilk kullanıcılara sun.
+
+### 6.1 — PDF Export
+- [ ] `react-to-pdf` veya `jsPDF` kütüphanesi ekle
+- [ ] Notları PDF olarak indir butonu
+- [ ] PDF'de logo, video adı ve tarih başlıkta görünsün
+
+### 6.2 — Video Metadata
+- [ ] YouTube oEmbed API ile video başlığı ve thumbnail çek
+- [ ] Sonuç ekranında video bilgilerini göster
+- [ ] Kanal adı ve video süresi de görünsün
+
+### 6.3 — UX İyileştirmeleri
+- [ ] Son kullanılan 3 videoyu local storage'da tut
+- [ ] "Son videolarım" kısmı ana sayfada göster
+- [ ] Notları local storage'a kaydet (sayfa yenilenmesine karşı)
+
+---
+
+## 🧪 AŞAMA 7 — Test & Kalite
+
+> Hedef: Güvenilir bir ürün çıkar.
+
+- [ ] Farklı uzunluklarda videolar test et (5dk, 20dk, 60dk, 90dk)
+- [ ] Farklı içerik türleri test et (matematik, tarih, dil, fen)
+- [ ] Yavaş internet bağlantısında test et
+- [ ] Mobil cihazlarda test et (iOS Safari, Android Chrome)
+- [ ] Ekran okuyucuyla test et (VoiceOver / NVDA)
+- [ ] Hatalı URL'lerle test et
+- [ ] Aynı anda 2 sekme açık test et
+
+---
+
+## ☁️ AŞAMA 8 — Yayına Alma (Deploy)
+
+> Hedef: Herkes erişebilsin.
+
+- [ ] Vercel hesabı aç
+- [ ] GitHub reposunu Vercel'e bağla
+- [ ] Environment variable'ları Vercel'e ekle (`GOOGLE_GENERATIVE_AI_API_KEY`)
+- [ ] `vercel.json` ile API timeout'u 60 saniyeye çıkar
+- [ ] Deploy sonrası tüm akışı canlıda test et
+- [ ] Custom domain bağla (opsiyonel)
+- [ ] `robots.txt` ve `sitemap.xml` ekle
+
+---
+
+## 📊 Özet İlerleme
+
+| Aşama | Durum | Tahmini Süre |
+|-------|-------|-------------|
+| Aşama 1 — Backend | 🔄 Devam ediyor | 1-2 gün |
+| Aşama 2 — Frontend | ⏳ Bekliyor | 2-3 gün |
+| Aşama 3 — Erişilebilirlik | ⏳ Bekliyor | 1-2 gün |
+| Aşama 4 — Hata Yönetimi | ⏳ Bekliyor | 1 gün |
+| Aşama 5 — Mobil | ⏳ Bekliyor | 1 gün |
+| Aşama 6 — v1.5 | ⏳ Bekliyor | 2-3 gün |
+| Aşama 7 — Test | ⏳ Bekliyor | 1-2 gün |
+| Aşama 8 — Deploy | ⏳ Bekliyor | 1 gün |
+
+**Tahmini toplam MVP süresi: ~10-15 gün**
+
+---
+
+## 🎯 Şu An Yapılacak İlk Görev
+
+```
+→ Aşama 1.1: app/api/notes/route.ts dosyasını yaz
+```
+
+Bu dosya olmadan frontend'e geçmek anlamsız.  
+Önce backend biter, sonra ekranlar gelir.
+
+---
+
+*Son güncelleme: Mart 2026*
