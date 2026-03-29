@@ -43,3 +43,4 @@ next-env.d.ts
 # geçici ses çıktıları (youtube-dl / yt-dlp)
 /public/temp/*
 !/public/temp/.gitkeep
+cookies.txt

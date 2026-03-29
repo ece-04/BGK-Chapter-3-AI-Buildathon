@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
     // Mac için Homebrew yollarını doğrudan komuta ekliyoruz (En garantisi bu!)
     const envPath = "PATH=/opt/homebrew/bin:/usr/local/bin:$PATH";
-    const command = `${envPath} yt-dlp --cookies /app/cookies.txt -x --audio-format m4a -o "${outputPath}" "${result.normalizedUrl}"`;
+    const command = `${envPath} yt-dlp -x --audio-format m4a -o "${outputPath}" "${result.normalizedUrl}"`;
 
     console.log("Komut çalıştırılıyor:", command);
 
