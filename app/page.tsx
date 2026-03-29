@@ -13,10 +13,37 @@ export default function Home() {
   const [apiError, setApiError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [transcription, setTranscription] = useState<string | null>(null);
+  const [quiz, setQuiz] = useState<any[]>([]);
+const [quizLoading, setQuizLoading] = useState(false);
+const [userAnswers, setUserAnswers] = useState<{[key: number]: string}>({});
+const [quizSubmitted, setQuizSubmitted] = useState(false);
   // Mevcut state'lerinin altına ekle
 const [isDyslexic, setIsDyslexic] = useState(false);
 const [highlightIndex, setHighlightIndex] = useState<{ start: number; end: number } | null>(null);
-
+async function handleQuizCreate() {
+  if (!transcription) return;
+  setQuizLoading(true);
+  setQuiz([]);
+  setUserAnswers({});
+  setQuizSubmitted(false);
+  try {
+    const res = await fetch("/api/quiz", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ notes: transcription }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setQuiz(data.quiz);
+    } else {
+      setApiError(data.error ?? "Quiz oluşturulamadı.");
+    }
+  } catch {
+    setApiError("Quiz oluşturulurken hata oluştu.");
+  } finally {
+    setQuizLoading(false);
+  }
+}
   async function handleProcessSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setClientError(null);
@@ -287,8 +314,7 @@ const [highlightIndex, setHighlightIndex] = useState<{ start: number; end: numbe
               >
                 {isDyslexic ? "📖 Disleksi Modu: AÇIK" : "📖 Disleksi Modunu Etkinleştir"}
               </button>
-            </div>
-
+              </div>
             {/* NOTLAR VEYA BOŞ DURUM */}
             <div className="relative">
               {transcription ? (
@@ -299,8 +325,8 @@ const [highlightIndex, setHighlightIndex] = useState<{ start: number; end: numbe
                     </div>
                     <ReactMarkdown
                       components={{
-                        h2: ({children}) => <h2 className={`font-fraunces text-[1rem] font-bold mt-4 mb-2 text-[var(--ink)] ${isDyslexic ? "font-dyslexic" : ""}`}>{children}</h2>,
-                        h3: ({children}) => <h3 className={`font-fraunces text-[0.9rem] font-semibold mt-3 mb-1 text-[var(--ink)] ${isDyslexic ? "font-dyslexic" : ""}`}>{children}</h3>,
+                        h2: ({children}) => <h2 className="font-fraunces text-[1rem] font-bold mt-4 mb-2 text-[var(--ink)]">{children}</h2>,
+                        h3: ({children}) => <h3 className="font-fraunces text-[0.9rem] font-semibold mt-3 mb-1 text-[var(--ink)]">{children}</h3>,
                         p: ({children}) => <p className="mb-2 text-[0.85rem] text-[var(--ink)]">{children}</p>,
                         li: ({children}) => <li className="mb-1 text-[0.85rem] text-[var(--ink)] ml-3 list-disc">{children}</li>,
                         strong: ({children}) => <strong className="font-bold text-[var(--accent)]">{children}</strong>,
@@ -309,11 +335,14 @@ const [highlightIndex, setHighlightIndex] = useState<{ start: number; end: numbe
                       {transcription}
                     </ReactMarkdown>
                   </div>
-
                   <div className="mt-3 flex gap-2">
                     <button
                       type="button"
-                      onClick={() => speakText(transcription ?? "")}
+                      onClick={() => {
+                        const u = new SpeechSynthesisUtterance(transcription);
+                        u.lang = "tr-TR";
+                        window.speechSynthesis.speak(u);
+                      }}
                       className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[var(--ink)] py-2.5 text-[0.75rem] font-bold text-white shadow-md transition-transform active:scale-95"
                     >
                       🔊 Sesli Oku
@@ -325,6 +354,96 @@ const [highlightIndex, setHighlightIndex] = useState<{ start: number; end: numbe
                     >
                       📋 Kopyala
                     </button>
+                    <button
+  type="button"
+  onClick={() => {
+    setTranscription(null);
+    setYoutubeUrl("");
+    setApiMessage(null);
+    setApiError(null);
+    setQuiz([]);
+    setUserAnswers({});
+    setQuizSubmitted(false);
+  }}
+  className="mt-2 flex w-full items-center justify-center gap-2 rounded-full border border-[var(--line)] bg-[var(--cream)] py-2.5 text-[0.75rem] font-bold text-[var(--ink)] transition-transform active:scale-95"
+>
+  🔄 Yeni Video
+</button>
+{/* QUIZ BÖLÜMÜ */}
+{transcription && (
+  <div className="mt-3">
+    <button
+      type="button"
+      onClick={handleQuizCreate}
+      disabled={quizLoading}
+      className="flex w-full items-center justify-center gap-2 rounded-full bg-[var(--accent2)] py-2.5 text-[0.75rem] font-bold text-white shadow-md transition-transform active:scale-95 disabled:opacity-50"
+    >
+      {quizLoading ? "⏳ Quiz oluşturuluyor..." : "🧪 Quiz Oluştur"}
+    </button>
+
+    {quiz.length > 0 && (
+      <div className="mt-4 flex flex-col gap-4">
+        {quiz.map((q, i) => (
+          <div key={i} className="rounded-xl border border-[var(--line)] bg-white p-4">
+            <p className="mb-3 text-[0.85rem] font-semibold text-[var(--ink)]">
+              {i + 1}. {q.soru}
+            </p>
+            <div className="flex flex-col gap-2">
+              {q.secenekler.map((s: string) => {
+                const isSelected = userAnswers[i] === s;
+                const isCorrect = s === q.dogruCevap;
+                let btnClass = "rounded-lg border px-3 py-2 text-left text-[0.78rem] transition-colors ";
+                if (!quizSubmitted) {
+                  btnClass += isSelected
+                    ? "border-[var(--accent)] bg-[rgba(200,82,42,0.1)] font-semibold"
+                    : "border-[var(--line)] hover:bg-[var(--cream)]";
+                } else {
+                  if (isCorrect) btnClass += "border-green-400 bg-green-50 font-semibold text-green-700";
+                  else if (isSelected) btnClass += "border-red-400 bg-red-50 text-red-700";
+                  else btnClass += "border-[var(--line)]";
+                }
+                return (
+                  <button
+                    key={s}
+                    type="button"
+                    disabled={quizSubmitted}
+                    onClick={() => setUserAnswers(prev => ({ ...prev, [i]: s }))}
+                    className={btnClass}
+                  >
+                    {s}
+                  </button>
+                );
+              })}
+            </div>
+            {quizSubmitted && (
+              <p className="mt-2 text-[0.75rem] text-[var(--muted)] italic">
+                💡 {q.aciklama}
+              </p>
+            )}
+          </div>
+        ))}
+
+        {!quizSubmitted && quiz.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setQuizSubmitted(true)}
+            className="flex w-full items-center justify-center rounded-full bg-[var(--ink)] py-2.5 text-[0.75rem] font-bold text-white"
+          >
+            ✅ Cevapları Kontrol Et
+          </button>
+        )}
+
+        {quizSubmitted && (
+          <div className="rounded-xl bg-[var(--cream)] p-4 text-center">
+            <p className="text-[0.9rem] font-bold text-[var(--ink)]">
+              Sonuç: {quiz.filter((q, i) => userAnswers[i] === q.dogruCevap).length} / {quiz.length} doğru 🎉
+            </p>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+)}
                   </div>
                 </div>
               ) : (
@@ -332,14 +451,14 @@ const [highlightIndex, setHighlightIndex] = useState<{ start: number; end: numbe
                   {pending ? (
                     <div className="flex flex-col items-center gap-3 py-2">
                       <div className="flex gap-1.5">
-                        <span className="h-2 w-2 rounded-full bg-[var(--accent)] animate-bounce" />
-                        <span className="h-2 w-2 rounded-full bg-[var(--accent)] animate-bounce" />
-                        <span className="h-2 w-2 rounded-full bg-[var(--accent)] animate-bounce" />
+                        <span className="h-2 w-2 rounded-full bg-[var(--accent)] animate-bounce" style={{animationDelay:"0ms"}} />
+                        <span className="h-2 w-2 rounded-full bg-[var(--accent)] animate-bounce" style={{animationDelay:"150ms"}} />
+                        <span className="h-2 w-2 rounded-full bg-[var(--accent)] animate-bounce" style={{animationDelay:"300ms"}} />
                       </div>
-                      <p className="text-[0.8rem] font-medium text-[var(--accent)]">{apiMessage ?? "Video isleniyor..."}</p>
-                      <p className="text-[0.7rem] text-[var(--muted)]">Bu islem 30-90 saniye surebilir</p>
+                      <p className="text-[0.8rem] font-medium text-[var(--accent)]">{apiMessage ?? "⏳ Video işleniyor..."}</p>
+                      <p className="text-[0.7rem] text-[var(--muted)]">Bu işlem 30-90 saniye sürebilir</p>
                     </div>
-                  ) : ("Henüz bir analiz yapılmadı.")}
+                  ) : "Henüz bir analiz yapılmadı. Bir YouTube linki girerek ders notlarınızı oluşturun."}
                 </div>
               )}
             </div>
