@@ -4,6 +4,12 @@
 [Demo videoyu izle](https://www.loom.com/share/6a9d0bf3c6fd4eaeb90b7834b86c1048)
 
 ## 🌐 Yayın Linki
+[https://bgk-chapter-3-ai-buildathon-production.up.railway.app](https://bgk-chapter-3-ai-buildathon-production.up.railway.app)
+
+## 🎬 Demo Video
+[Demo videoyu izle](https://www.loom.com/share/6a9d0bf3c6fd4eaeb90b7834b86c1048)
+
+## 🌐 Yayın Linki
 https://accessinote.up.railway.app
 
 > YouTube ders videolarını saniyeler içinde yapılandırılmış, sesli okunabilir notlara dönüştüren yapay zeka destekli web uygulaması.
