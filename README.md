@@ -103,3 +103,19 @@ API anahtarını [Google AI Studio](https://aistudio.google.com)'dan ücretsiz a
 ---
 
 *Eğitimde erişilebilirlik için yapıldı 🤍*
+
+---
+
+## 📖 Proje Hikayesi
+
+Eğitimde fırsat eşitliği benim için sadece bir slogan değil — AccessiNote'u bu inançla geliştirdim.
+
+Türkiye'de görme engelli ve disleksik öğrenciler, ders videolarındaki bilgiye diğer öğrencilerle eşit şekilde erişemiyor. 60 dakikalık bir videodan not çıkarmak ortalama 3.5 saat alıyor. Bu süreyi 60 saniyeye indirmek istedim.
+
+AccessiNote, YouTube ders videolarını yapay zeka destekli bir pipeline ile işliyor: yt-dlp ile sesi ayıklıyor, Google Gemini 2.5 Flash ile transkribe ediyor, ardından hiyerarşik ve yapılandırılmış ders notuna dönüştürüyor. Kullanıcılar notları sesli dinleyebiliyor, tek tıkla kopyalayabiliyor ve otomatik quiz oluşturabiliyorlar.
+
+Disleksik öğrenciler için OpenDyslexic font desteği, görme engelliler için ekran okuyucu uyumlu ARIA etiketleri ekledim. Erişilebilirlik sonradan eklenen bir özellik değil — tasarımın temeli.
+
+Next.js, Typinde yayında. Gelecekte görsel içerik anlama (OCR), PDF export ve çoklu dil desteği planlanıyor.
+
+AccessiNote, teknolojinin gerçekten herkese eşit fırsat sunabileceğinin kanıtı.
