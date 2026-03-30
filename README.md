@@ -1,5 +1,11 @@
 # AccessiNote 🎓
 
+## 🎬 Demo Video
+[Demo videoyu izle](https://www.loom.com/share/6a9d0bf3c6fd4eaeb90b7834b86c1048)
+
+## 🌐 Yayın Linki
+https://accessinote.up.railway.app
+
 > YouTube ders videolarını saniyeler içinde yapılandırılmış, sesli okunabilir notlara dönüştüren yapay zeka destekli web uygulaması.
 
 Özellikle **görme engelli** ve **disleksik** öğrenciler için tasarlandı.
